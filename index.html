@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SFT.iBT</title>
+    <title>SFT.iBT v6.0</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
@@ -11,214 +11,104 @@
             --bg: #000000;
             --glass: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-highlight: rgba(255, 255, 255, 0.12);
             --gold: #D4AF37;
             --silver: #C0C0C0;
             --red: #FF3B30;
-            --text-main: #FFFFFF;
-            --text-muted: #8E8E93;
-            --font: 'SF Mono', 'Menlo', 'Courier New', monospace;
+            --accent-glow: rgba(212, 175, 55, 0.2);
+            --font: 'SF Mono', 'Menlo', monospace;
         }
 
         body {
             background-color: var(--bg);
             background-image: radial-gradient(circle at 50% -20%, #1a1a1a 0%, #000 100%);
-            color: var(--text-main);
+            color: #fff;
             font-family: var(--font);
             margin: 0;
             padding: 15px;
             padding-bottom: 140px;
             -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
         }
 
         /* --- Liquid Glass UI --- */
         .glass-panel {
             background: var(--glass);
-            backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
             border: 1px solid var(--glass-border);
-            border-radius: 18px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            margin-bottom: 12px;
         }
 
         /* Header */
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            padding: 10px 0;
-        }
+        .header { display: flex; align-items: center; gap: 15px; margin: 10px 0 25px 0; }
+        .logo-svg { width: 45px; height: 45px; filter: drop-shadow(0 0 10px var(--gold)); }
+        .brand-box h1 { font-size: 1.4rem; margin: 0; letter-spacing: 3px; color: var(--gold); }
+        .brand-box span { color: var(--silver); font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; }
 
-        .logo-svg { width: 45px; height: 45px; filter: drop-shadow(0 0 8px var(--gold)); }
+        /* HUD Matrix */
+        .hud-matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .hud-cell { padding: 15px; text-align: center; border-bottom: 1px solid var(--glass-border); }
+        .hud-cell.full { grid-column: span 2; border-bottom: none; }
+        .stat-label { font-size: 0.55rem; color: var(--silver); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; opacity: 0.7; }
+        .stat-val { font-size: 1.1rem; font-weight: bold; }
+        .gold-txt { color: var(--gold); text-shadow: 0 0 10px var(--accent-glow); }
+        .red-txt { color: var(--red); }
+        .silver-txt { color: var(--silver); }
 
-        .brand-box h1 {
-            font-size: 1.4rem;
-            margin: 0;
-            letter-spacing: 2px;
-            color: var(--gold);
-            text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-        }
-
-        .brand-box span {
-            color: var(--silver);
-            font-size: 0.65rem;
-            display: block;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-
-        /* HUD */
-        .hud-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
-        .stat-card { padding: 18px; text-align: center; position: relative; overflow: hidden; }
-        .stat-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--glass-highlight), transparent);
-        }
-
-        .stat-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 1px; }
-        .stat-val { font-size: 1.2rem; font-weight: bold; }
-        .stat-val.gold { color: var(--gold); }
-        .stat-val.red { color: var(--red); }
-        .stat-val.silver { color: var(--silver); }
-
-        /* Ledger Items */
-        h2 {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin: 30px 0 12px 0;
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        /* Ledger */
+        h2 { font-size: 0.7rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin: 25px 0 10px 10px; display: flex; align-items: center; gap: 10px; }
         h2::after { content: ''; flex: 1; height: 1px; background: var(--glass-border); }
 
-        .bill-card {
+        .item-card {
             background: var(--glass);
             border: 1px solid var(--glass-border);
-            border-radius: 14px;
+            border-radius: 15px;
             padding: 16px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .item-card.paid { opacity: 0.25; filter: grayscale(1); transform: scale(0.97); }
 
-        .bill-card:active { transform: scale(0.97); background: var(--glass-highlight); }
-        .bill-card.paid { opacity: 0.3; filter: grayscale(1); transform: scale(0.98); }
-
-        .bill-info { display: flex; flex-direction: column; }
-        .bill-name { font-weight: bold; font-size: 0.9rem; color: #fff; }
-        .bill-meta { font-size: 0.7rem; color: var(--silver); margin-top: 4px; }
-
-        /* Liquid Checkbox */
         .checkbox {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            border: 1px solid var(--gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-            background: transparent;
+            width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--gold);
+            display: flex; align-items: center; justify-content: center; transition: 0.4s;
         }
+        .checkbox.checked { background: var(--gold); box-shadow: 0 0 12px var(--gold); }
 
-        .checkbox.checked {
-            background: var(--gold);
-            box-shadow: 0 0 15px var(--gold);
-        }
-        .checkbox.checked::after { content: 'L'; transform: rotate(45deg) scaleX(-1); color: #000; font-weight: bold; font-size: 0.8rem; margin-top: -2px; }
-
-        /* Inputs & Buttons */
+        /* Controls */
         .liquid-btn {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(255, 255, 255, 0.05));
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 14px;
-            border-radius: 12px;
-            font-family: var(--font);
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            transition: 0.3s;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), transparent);
+            border: 1px solid var(--gold); color: var(--gold);
+            padding: 14px; border-radius: 14px; width: 100%; font-family: var(--font);
+            font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; cursor: pointer;
         }
-
-        .liquid-btn:active { background: var(--gold); color: #000; }
-
         .form-input {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            color: #fff;
-            padding: 12px;
-            border-radius: 10px;
-            margin-top: 5px;
-            font-family: var(--font);
-            box-sizing: border-box;
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            color: #fff; padding: 12px; border-radius: 10px; margin: 5px 0 15px 0; box-sizing: border-box; font-family: var(--font);
         }
 
-        /* Nav Bar */
-        .bottom-nav {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 400px;
-            height: 70px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 1000;
+        /* Nav */
+        .nav-bar {
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            width: 85%; height: 65px; display: flex; justify-content: space-around; align-items: center; z-index: 1000;
         }
-
-        .nav-item {
-            color: var(--silver);
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-        }
-        .nav-item.active { color: var(--gold); }
+        .nav-link { color: var(--silver); font-size: 0.6rem; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .nav-link.active { color: var(--gold); }
 
         /* Modal */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            padding: 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(15px);
+            display: none; justify-content: center; align-items: center; z-index: 2000;
         }
-
-        .modal { width: 100%; max-width: 400px; padding: 25px; max-height: 80vh; overflow-y: auto; }
-
-        /* Settings Rows */
-        .setting-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--glass-border);
-        }
+        .modal { width: 90%; max-width: 400px; padding: 25px; }
 
         .view-pane { display: none; }
         .view-pane.active { display: block; }
-
     </style>
 </head>
 <body>
@@ -227,29 +117,36 @@
         <div class="logo-svg">
             <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
                 <path d="M256 32 C256 32 64 64 64 192 C64 320 256 480 256 480 C256 480 448 320 448 192 C448 64 256 32 256 32 Z" fill="none" stroke="#D4AF37" stroke-width="15"/>
-                <path d="M120 250 L 180 250 L 220 180 L 280 320 L 330 220 L 392 220" fill="none" stroke="#FFFFFF" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="392" cy="220" r="15" fill="#D4AF37" />
+                <path d="M160 250 L 220 320 L 350 180" fill="none" stroke="#FFFFFF" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </div>
         <div class="brand-box">
             <h1>SFT.iBT</h1>
-            <span>The Obsidian Matrix</span>
+            <span>Aethelgard Matrix v6.0</span>
         </div>
     </div>
 
     <div id="view-dashboard" class="view-pane active">
-        <div class="hud-grid">
-            <div class="stat-card glass-panel">
+        <div class="glass-panel hud-matrix">
+            <div class="hud-cell">
                 <div class="stat-label">Total Monthly</div>
-                <div id="hud-gross" class="stat-val silver">$0</div>
+                <div id="hud-total-income" class="stat-val silver-txt">$0</div>
             </div>
-            <div class="stat-card glass-panel">
+            <div class="hud-cell">
+                <div class="stat-label">Trade Profits (Out)</div>
+                <div id="hud-trade-out" class="stat-val gold-txt">$0</div>
+            </div>
+            <div class="hud-cell">
                 <div class="stat-label" id="escrow-label">Escrow (0%)</div>
-                <div id="hud-escrow" class="stat-val red">$0</div>
+                <div id="hud-escrow" class="stat-val red-txt">$0</div>
             </div>
-            <div class="stat-card glass-panel" style="grid-column: span 2;">
-                <div class="stat-label" id="buffer-label">Weekly Surplus</div>
-                <div id="hud-buffer" class="stat-val gold">$0</div>
+            <div class="hud-cell">
+                <div class="stat-label">Daily Burn Rate</div>
+                <div id="hud-burn" class="stat-val red-txt">$0</div>
+            </div>
+            <div class="hud-cell full" style="border-top: 1px solid var(--glass-border);">
+                <div class="stat-label" id="cycle-label">Weekly Surplus</div>
+                <div id="hud-surplus" class="stat-val gold-txt" style="font-size: 1.8rem;">$0</div>
             </div>
         </div>
         <div id="ledger-content"></div>
@@ -257,45 +154,41 @@
 
     <div id="view-settings" class="view-pane">
         <div class="glass-panel" style="padding: 20px;">
-            <h2 style="margin-top: 0;">Configuration</h2>
-            <div class="setting-row">
-                <span>Pay Cycle</span>
-                <select id="cycle-select" class="form-input" style="width: auto;" onchange="updateSettings()">
-                    <option value="4">Weekly</option>
-                    <option value="2">Bi-Weekly</option>
-                </select>
-            </div>
-            <div class="setting-row">
-                <span>Escrow Rate (%)</span>
-                <input type="number" id="escrow-rate" class="form-input" style="width: 80px;" onchange="updateSettings()">
-            </div>
-            
-            <h2 style="margin-top: 25px;">Category Matrix</h2>
-            <div id="category-list"></div>
-            <div style="display: flex; gap: 8px; margin-top: 10px;">
-                <input type="text" id="new-cat-name" class="form-input" placeholder="New Category...">
-                <button class="liquid-btn" style="width: 80px; margin-top: 5px;" onclick="addCategory()">+</button>
-            </div>
+            <h2 style="margin-top: 0;">Income Streams</h2>
+            <div id="income-list"></div>
+            <button class="liquid-btn" style="padding: 8px; font-size: 0.6rem;" onclick="addIncomeRow()">+ Add Income Stream</button>
 
-            <h2 style="margin-top: 25px;">Income</h2>
-            <div class="setting-row">
-                <span>Primary (D)</span>
-                <input type="number" id="inc-d" class="form-input" style="width: 120px;" onchange="updateSettings()">
-            </div>
-            <div class="setting-row">
-                <span>Secondary (K)</span>
-                <input type="number" id="inc-k" class="form-input" style="width: 120px;" onchange="updateSettings()">
+            <h2 style="margin-top: 25px;">Trading Account</h2>
+            <div class="stat-label">Capital IN (To Trading)</div>
+            <input type="number" id="trade-in" class="form-input" onchange="updateMatrix()">
+            <div class="stat-label">Profits OUT (To Bank)</div>
+            <input type="number" id="trade-out" class="form-input" onchange="updateMatrix()">
+
+            <h2 style="margin-top: 25px;">Global Params</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                    <div class="stat-label">Cycle</div>
+                    <select id="cycle-divisor" class="form-input" onchange="updateMatrix()">
+                        <option value="4">Weekly</option>
+                        <option value="2">Bi-Weekly</option>
+                        <option value="1">Monthly</option>
+                    </select>
+                </div>
+                <div>
+                    <div class="stat-label">Escrow %</div>
+                    <input type="number" id="escrow-rate" class="form-input" onchange="updateMatrix()">
+                </div>
             </div>
         </div>
 
-        <button class="liquid-btn" onclick="openModal('add')">+ Add Ledger Item</button>
-        <button class="liquid-btn" style="border-color: #555; color: #888;" onclick="factoryReset()">Factory Reset</button>
+        <button class="liquid-btn" onclick="openModal('add')">+ Add Expense Entry</button>
+        <button class="liquid-btn" style="border-color: #444; color: #666;" onclick="factoryReset()">System Wipe</button>
     </div>
 
-    <div class="bottom-nav glass-panel">
-        <a href="#" class="nav-item active" onclick="switchView('dashboard', this)"><span>📊</span>Ledger</a>
-        <a href="#" class="nav-item" onclick="resetCycle()"><span>🔄</span>Reset</a>
-        <a href="#" class="nav-item" onclick="switchView('settings', this)"><span>⚙️</span>Matrix</a>
+    <div class="nav-bar glass-panel">
+        <a href="#" class="nav-link active" onclick="switchView('dashboard', this)"><span>📊</span>Ledger</a>
+        <a href="#" class="nav-link" onclick="resetCheckmarks()"><span>🔄</span>Cycle</a>
+        <a href="#" class="nav-link" onclick="switchView('settings', this)"><span>⚙️</span>Matrix</a>
     </div>
 
     <div id="modal-overlay" class="modal-overlay">
@@ -303,118 +196,112 @@
     </div>
 
     <script>
-        let state = JSON.parse(localStorage.getItem('sft_ibt_v5')) || {
-            config: { incD: 3600, incK: 1100, divisor: 4, escrow: 26 },
-            categories: [
-                { id: 'priority', label: 'Kill List' },
-                { id: 'necessary', label: 'Fixed Costs' },
-                { id: 'lifestyle', label: 'Burn Rate' }
-            ],
-            bills: [
-                { id: 1, name: "Rent", amount: 600, type: "necessary", note: "DK: 150/wk", paid: false },
-                { id: 2, name: "Car Note", amount: 440, type: "necessary", note: "System Item", paid: false },
-                { id: 3, name: "SFTi-Tools", amount: 50, type: "priority", note: "Venture Cap", paid: false }
+        let state = JSON.parse(localStorage.getItem('sft_ibt_v6')) || {
+            incomes: [{ name: 'Daniel', amount: 3600, escrow: true }, { name: 'Katlynn', amount: 1100, escrow: false }],
+            trading: { in: 0, out: 0 },
+            config: { divisor: 4, escrowRate: 26 },
+            expenses: [
+                { id: 1, name: "Rent", amount: 600, cat: "Fixed", paid: false },
+                { id: 2, name: "SFT.iBT Tools", amount: 50, cat: "Growth", paid: false }
             ]
         };
 
         function init() {
-            document.getElementById('inc-d').value = state.config.incD;
-            document.getElementById('inc-k').value = state.config.incK;
-            document.getElementById('cycle-select').value = state.config.divisor;
-            document.getElementById('escrow-rate').value = state.config.escrow;
+            renderIncomeRows();
+            document.getElementById('trade-in').value = state.trading.in;
+            document.getElementById('trade-out').value = state.trading.out;
+            document.getElementById('cycle-divisor').value = state.config.divisor;
+            document.getElementById('escrow-rate').value = state.config.escrowRate;
             render();
-            renderCategories();
+        }
+
+        function renderIncomeRows() {
+            const container = document.getElementById('income-list');
+            container.innerHTML = '';
+            state.incomes.forEach((inc, idx) => {
+                container.innerHTML += `
+                    <div style="display: flex; gap: 8px; margin-bottom: 5px;">
+                        <input type="text" class="form-input" style="flex: 2;" value="${inc.name}" onchange="updateInc(${idx}, 'name', this.value)">
+                        <input type="number" class="form-input" style="flex: 1;" value="${inc.amount}" onchange="updateInc(${idx}, 'amount', this.value)">
+                        <button style="background:none; border:none; color:var(--red);" onclick="removeInc(${idx})">×</button>
+                    </div>
+                `;
+            });
+        }
+
+        function updateInc(idx, key, val) { 
+            state.incomes[idx][key] = key === 'amount' ? Number(val) : val; 
+            render(); 
+        }
+        function addIncomeRow() { state.incomes.push({ name: 'New Stream', amount: 0, escrow: false }); renderIncomeRows(); }
+        function removeInc(idx) { state.incomes.splice(idx, 1); renderIncomeRows(); render(); }
+
+        function updateMatrix() {
+            state.trading.in = Number(document.getElementById('trade-in').value);
+            state.trading.out = Number(document.getElementById('trade-out').value);
+            state.config.divisor = Number(document.getElementById('cycle-divisor').value);
+            state.config.escrowRate = Number(document.getElementById('escrow-rate').value);
+            render();
         }
 
         function render() {
             const container = document.getElementById('ledger-content');
-            container.innerHTML = '';
+            container.innerHTML = '<h2>Financial Entries</h2>';
             
-            state.categories.forEach(cat => {
-                const bills = state.bills.filter(b => b.type === cat.id);
-                if(bills.length === 0) return;
-
-                const h2 = document.createElement('h2');
-                h2.innerText = cat.label;
-                container.appendChild(h2);
-
-                bills.forEach(bill => {
-                    const card = document.createElement('div');
-                    card.className = `bill-card ${bill.paid ? 'paid' : ''}`;
-                    card.onclick = () => editBill(bill.id);
-                    card.innerHTML = `
-                        <div class="bill-info">
-                            <span class="bill-name">${bill.name}</span>
-                            <span class="bill-meta">$${bill.amount} | ${bill.note}</span>
-                        </div>
-                        <div class="checkbox ${bill.paid ? 'checked' : ''}" onclick="event.stopPropagation(); togglePaid(${bill.id})"></div>
-                    `;
-                    container.appendChild(card);
-                });
-            });
-
-            updateHUD();
-            localStorage.setItem('sft_ibt_v5', JSON.stringify(state));
-        }
-
-        function renderCategories() {
-            const list = document.getElementById('category-list');
-            list.innerHTML = '';
-            state.categories.forEach(cat => {
-                const row = document.createElement('div');
-                row.className = 'setting-row';
-                row.innerHTML = `
-                    <span>${cat.label}</span>
-                    <button style="background:none; border:none; color:var(--red); cursor:pointer;" onclick="deleteCategory('${cat.id}')">Remove</button>
+            state.expenses.forEach(exp => {
+                const card = document.createElement('div');
+                card.className = `item-card ${exp.paid ? 'paid' : ''}`;
+                card.onclick = () => editExpense(exp.id);
+                card.innerHTML = `
+                    <div>
+                        <div style="font-weight:bold; font-size:0.9rem;">${exp.name}</div>
+                        <div style="font-size:0.7rem; color:var(--silver);">$${exp.amount} | ${exp.cat}</div>
+                    </div>
+                    <div class="checkbox ${exp.paid ? 'checked' : ''}" onclick="event.stopPropagation(); togglePaid(${exp.id})"></div>
                 `;
-                list.appendChild(row);
+                container.appendChild(card);
             });
+
+            calculateHUD();
+            localStorage.setItem('sft_ibt_v6', JSON.stringify(state));
         }
 
-        function updateHUD() {
-            const gross = Number(state.config.incD) + Number(state.config.incK);
-            const escrowVal = Number(state.config.incD) * (state.config.escrow / 100);
-            const div = state.config.divisor;
+        function calculateHUD() {
+            const totalIncome = state.incomes.reduce((sum, i) => sum + i.amount, 0);
+            const tradeOut = state.trading.out;
             
-            const unpaid = state.bills.filter(b => !b.paid).reduce((s, b) => s + Number(b.amount), 0);
-            const buffer = (gross / div) - (unpaid / div);
+            // Escrow applies only to the first income (Daniel) as per original logic, or you can adjust.
+            // Let's assume escrow applies to total gross income for SOTA safety.
+            const escrowVal = totalIncome * (state.config.escrowRate / 100);
+            
+            const totalMonthlyExpenses = state.expenses.reduce((sum, e) => sum + Number(e.amount), 0);
+            const dailyBurn = totalMonthlyExpenses / 30;
+            
+            const unpaid = state.expenses.filter(e => !e.paid).reduce((sum, e) => sum + Number(e.amount), 0);
+            const cycleIncome = (totalIncome + tradeOut) / state.config.divisor;
+            const cycleSurplus = cycleIncome - (unpaid / state.config.divisor);
 
-            document.getElementById('hud-gross').innerText = `$${gross.toLocaleString()}`;
-            document.getElementById('hud-escrow').innerText = `$${Math.round(escrowVal).toLocaleString()}`;
-            document.getElementById('escrow-label').innerText = `Escrow (${state.config.escrow}%)`;
-            document.getElementById('hud-buffer').innerText = `$${Math.round(buffer).toLocaleString()}`;
-            document.getElementById('buffer-label').innerText = div == 4 ? "Weekly Surplus" : "Bi-Weekly Surplus";
+            document.getElementById('hud-total-income').innerText = `$${totalIncome.toLocaleString()}`;
+            document.getElementById('hud-trade-out').innerText = `+$${tradeOut.toLocaleString()}`;
+            document.getElementById('hud-escrow').innerText = `-$${Math.round(escrowVal).toLocaleString()}`;
+            document.getElementById('escrow-label').innerText = `Escrow (${state.config.escrowRate}%)`;
+            document.getElementById('hud-burn').innerText = `$${Math.round(dailyBurn).toLocaleString()}`;
+            document.getElementById('hud-surplus').innerText = `$${Math.round(cycleSurplus).toLocaleString()}`;
+            
+            const divLabels = { 4: 'Weekly Surplus', 2: 'Bi-Weekly Surplus', 1: 'Monthly Surplus' };
+            document.getElementById('cycle-label').innerText = divLabels[state.config.divisor];
         }
 
-        function updateSettings() {
-            state.config.incD = document.getElementById('inc-d').value;
-            state.config.incK = document.getElementById('inc-k').value;
-            state.config.divisor = document.getElementById('cycle-select').value;
-            state.config.escrow = document.getElementById('escrow-rate').value;
+        function togglePaid(id) {
+            const exp = state.expenses.find(e => e.id === id);
+            exp.paid = !exp.paid;
             render();
-        }
-
-        function addCategory() {
-            const name = document.getElementById('new-cat-name').value;
-            if(!name) return;
-            state.categories.push({ id: name.toLowerCase().replace(/\s/g, ''), label: name });
-            document.getElementById('new-cat-name').value = '';
-            renderCategories();
-            render();
-        }
-
-        function deleteCategory(id) {
-            if(confirm("Delete this category? Items within it will be hidden.")) {
-                state.categories = state.categories.filter(c => c.id !== id);
-                renderCategories();
-                render();
-            }
         }
 
         function switchView(v, el) {
             document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
             document.getElementById('view-'+v).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             el.classList.add('active');
         }
 
@@ -423,70 +310,35 @@
             const content = document.getElementById('modal-content');
             modal.style.display = 'flex';
             
-            if(type === 'add' || type === 'edit') {
-                const b = data || { name: '', amount: '', type: state.categories[0].id, note: '' };
-                let catOptions = '';
-                state.categories.forEach(c => {
-                    catOptions += `<option value="${c.id}" ${b.type == c.id ? 'selected' : ''}>${c.label}</option>`;
-                });
-
-                content.innerHTML = `
-                    <h3>${data ? 'Adjust Entry' : 'New Entry'}</h3>
-                    <label class="stat-label">Description</label>
-                    <input type="text" id="m-name" class="form-input" value="${b.name}">
-                    <label class="stat-label">Monthly Impact ($)</label>
-                    <input type="number" id="m-amount" class="form-input" value="${b.amount}">
-                    <label class="stat-label">Category</label>
-                    <select id="m-cat" class="form-input">${catOptions}</select>
-                    <label class="stat-label">Notes</label>
-                    <input type="text" id="m-note" class="form-input" value="${b.note}">
-                    <button class="liquid-btn" onclick="saveBill(${b.id || 'null'})">Commit Changes</button>
-                    ${data ? `<button class="liquid-btn" style="border-color:var(--red); color:var(--red);" onclick="deleteBill(${b.id})">Purge Entry</button>` : ''}
-                    <button class="liquid-btn" style="border-color:#444; color:#888;" onclick="closeModal()">Back</button>
-                `;
-            }
+            const e = data || { name: '', amount: '', cat: 'Variable' };
+            content.innerHTML = `
+                <h3 style="color:var(--gold)">Expense Entry</h3>
+                <input type="text" id="m-name" class="form-input" placeholder="Entry Name" value="${e.name}">
+                <input type="number" id="m-amount" class="form-input" placeholder="Amount" value="${e.amount}">
+                <input type="text" id="m-cat" class="form-input" placeholder="Category" value="${e.cat}">
+                <button class="liquid-btn" onclick="saveExpense(${e.id || 'null'})">Commit</button>
+                ${data ? `<button class="liquid-btn" style="border-color:var(--red); color:var(--red);" onclick="deleteExpense(${e.id})">Delete</button>` : ''}
+                <button class="liquid-btn" style="border-color:#444; color:#888; margin-top:20px;" onclick="closeModal()">Back</button>
+            `;
         }
 
-        function saveBill(id) {
-            const billData = {
+        function saveExpense(id) {
+            const d = {
                 name: document.getElementById('m-name').value,
-                amount: document.getElementById('m-amount').value,
-                type: document.getElementById('m-cat').value,
-                note: document.getElementById('m-note').value,
+                amount: Number(document.getElementById('m-amount').value),
+                cat: document.getElementById('m-cat').value,
                 paid: false
             };
-
-            if(id === null) {
-                billData.id = Date.now();
-                state.bills.push(billData);
-            } else {
-                const b = state.bills.find(x => x.id === id);
-                Object.assign(b, billData, { paid: b.paid });
-            }
-            closeModal();
-            render();
+            if(id === null) { d.id = Date.now(); state.expenses.push(d); }
+            else { Object.assign(state.expenses.find(x => x.id === id), d); }
+            closeModal(); render();
         }
 
-        function editBill(id) {
-            const b = state.bills.find(x => x.id === id);
-            openModal('edit', b);
-        }
-
-        function deleteBill(id) {
-            state.bills = state.bills.filter(x => x.id !== id);
-            closeModal();
-            render();
-        }
-
-        function togglePaid(id) {
-            const b = state.bills.find(x => x.id === id);
-            b.paid = !b.paid;
-            render();
-        }
-
+        function editExpense(id) { openModal('edit', state.expenses.find(x => x.id === id)); }
+        function deleteExpense(id) { state.expenses = state.expenses.filter(x => x.id !== id); closeModal(); render(); }
         function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
-        function resetCycle() { if(confirm("Start new matrix cycle?")) { state.bills.forEach(b => b.paid = false); render(); } }
-        function factoryReset() { if(confirm("Wipe all SFT.iBT data?")) { localStorage.removeItem('sft_ibt_v5'); location.reload(); } }
+        function resetCheckmarks() { if(confirm("Start new cycle?")) { state.expenses.forEach(e => e.paid = false); render(); } }
+        function factoryReset() { if(confirm("Wipe System?")) { localStorage.removeItem('sft_ibt_v6'); location.reload(); } }
 
         window.onload = init;
     </script>
