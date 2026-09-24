@@ -172,7 +172,7 @@
         ];
 
         // PERSISTENT STATE
-        let state = JSON.parse(localStorage.getItem('sfti_ibt_v8')) || {
+        const defaultState = {
             incomes: [{ id: 1, name: 'Daniel', amount: 3600 }, { id: 2, name: 'Katlynn', amount: 1100 }],
             rules: [
                 { id: 1, name: 'Trading Escrow', type: 'percent', value: 5, target: 'total' },
@@ -182,6 +182,21 @@
             categories: ["Fixed", "Utility", "Lifestyle", "Debt"],
             config: { divisor: 4, tradeOut: 0 }
         };
+
+        let state;
+        try {
+            const saved = localStorage.getItem('sfti_ibt_v8');
+            state = saved ? JSON.parse(saved) : {};
+            // Deep merge to ensure missing properties are populated
+            state = {
+                ...defaultState,
+                ...state,
+                config: { ...defaultState.config, ...(state.config || {}) }
+            };
+        } catch (e) {
+            console.error("LocalStorage error, using default state", e);
+            state = defaultState;
+        }
 
         function init() {
             render();
